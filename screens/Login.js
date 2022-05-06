@@ -1,7 +1,4 @@
-// import React from 'react';
-import React, { useEffect, useState } from 'react';
-// import { Text, View, Button } from 'react-native';
-import { globalStyles } from '../styles/global';
+import React, { useState } from 'react';
 import {
   KeyboardAvoidingView,
   StyleSheet,
@@ -10,25 +7,32 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { auth } from '../firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+// import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../config/firebase';
+import ErrorMessage from '../components/ErrorMessage';
 
 //
 
 function Login({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+
   const handleLogin = () => {
-    console.log(email, password, 'hi');
+    if (email !== '' && password !== '') {
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => console.log('Login success'))
+        .catch((err) => setLoginError(err.message));
+    }
   };
   const handleSignUp = () => {
-    // navigation.navigate('Signup');
-    auth
-      .createUserWithEmailAndPassword(email, password)
-      .then((userCredentials) => {
-        const user = userCredentials.user;
-        console.log('Registered with:', user.email);
-      })
-      .catch((error) => alert(error.message));
+    // if (email !== '' && password !== '') {
+    //   createUserWithEmailAndPassword(auth, email, password)
+    //     .then(() => console.log('Signup success'))
+    //     .catch((err) => console.log(`Login err: ${err}`));
+    // }
+    navigation.navigate('Signup');
   };
   return (
     <KeyboardAvoidingView style={styles.container} behavior='padding'>
@@ -47,6 +51,7 @@ function Login({ navigation }) {
           secureTextEntry
         />
       </View>
+      {loginError ? <ErrorMessage error={loginError} visible={true} /> : null}
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity onPress={handleLogin} style={styles.button}>
@@ -60,13 +65,6 @@ function Login({ navigation }) {
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
-    // <View style={globalStyles.container}>
-    //   <Text>Login Page</Text>
-    //   <Button
-    //     title='Go to Signup'
-    //     onPress={() => navigation.navigate('Signup')}
-    //   />
-    // </View>
   );
 }
 const styles = StyleSheet.create({

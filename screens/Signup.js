@@ -6,7 +6,7 @@ function Signup({ navigation }) {
   return (
     <View style={globalStyles.container}>
       <Text>Signup Page</Text>
-      <Button title='Go to Chat' onPress={() => navigation.navigate('Chat')} />
+      {/* <Button title='Go to Chat' onPress={() => navigation.navigate('Chat')} /> */}
     </View>
   );
 }
