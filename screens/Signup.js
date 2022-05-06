@@ -1,7 +1,12 @@
-/** @format */
-
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Button, TextInput, Alert } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Alert,
+  TouchableOpacity,
+} from 'react-native';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../config/firebase';
 
@@ -52,11 +57,16 @@ export default function Signup({ navigation }) {
         value={password}
         onChangeText={(text) => setPassword(text)}
       />
-      <Button onPress={onHandleSignup} color="#f57c00" title="Signup" />
-      <Button
-        onPress={() => navigation.navigate('Login')}
-        title="Go to Login"
-      />
+      <TouchableOpacity onPress={onHandleSignup}>
+        <View style={styles.button}>
+          <Text style={styles.buttonText}>Sign up</Text>
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+        <View style={styles.buttonOutline}>
+          <Text style={styles.buttonOutlineText}>Login</Text>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -83,5 +93,39 @@ const styles = StyleSheet.create({
     borderColor: '#333',
     borderRadius: 8,
     padding: 12,
+  },
+  button: {
+    borderRadius: 10,
+    paddingVertical: 14,
+    paddingHorizontal: 10,
+    backgroundColor: '#0782F9',
+    width: '60%',
+    marginBottom: 5,
+    alignSelf: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  buttonOutline: {
+    borderRadius: 10,
+    paddingVertical: 14,
+    paddingHorizontal: 10,
+    backgroundColor: 'white',
+    width: '60%',
+    marginBottom: 5,
+    alignSelf: 'center',
+    borderColor: '#0782F9',
+    borderWidth: 2,
+  },
+  buttonOutlineText: {
+    color: '#0782F9',
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+    fontSize: 16,
+    textAlign: 'center',
   },
 });

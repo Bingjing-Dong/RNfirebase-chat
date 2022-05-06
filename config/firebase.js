@@ -1,8 +1,6 @@
-/** @format */
-
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
 import Constants from 'expo-constants';
 
 // Firebase config
@@ -16,8 +14,16 @@ const firebaseConfig = {
   databaseURL: Constants.manifest.extra.databaseURL,
 };
 
-// initialize firebase
-initializeApp(firebaseConfig);
+let Firebase;
 
-export const auth = getAuth();
-export const database = getFirestore();
+if (firebase.apps.length === 0) {
+  Firebase = firebase.initializeApp(firebaseConfig);
+} else {
+  Firebase = firebase.app();
+}
+
+const database = Firebase.firestore();
+const auth = firebase.auth();
+
+export { database, auth };
+export default Firebase;
