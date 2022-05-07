@@ -1,17 +1,47 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  TextInput,
+} from 'react-native';
+import { database } from '../config/firebase';
 
 export default function AddChatRoom({ navigation }) {
   const [roomName, setRoomName] = useState('');
+  function handleCreateRoom() {
+    if (roomName.length > 0) {
+      database
+        .collection('ROOM')
+        .add({
+          name: roomName,
+        })
+        .then(() => {
+          navigation.navigate('Chat');
+        });
+    }
+  }
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Create a new chat room</Text>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-        <View style={styles.button}>
-          <Text style={styles.buttonText}>Close Modal</Text>
-        </View>
+      <TextInput
+        style={styles.input}
+        placeholder="Enter room name"
+        autoCapitalize="none"
+        value={roomName}
+        onChangeText={(text) => setRoomName(text)}
+      />
+      <TouchableOpacity
+        style={
+          roomName.length === 0
+            ? { ...styles.button, ...styles.buttonDisabled }
+            : styles.button
+        }
+        onPress={handleCreateRoom}
+      >
+        <Text style={styles.buttonText}>Create</Text>
       </TouchableOpacity>
     </View>
   );
@@ -31,6 +61,15 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     paddingBottom: 24,
   },
+  input: {
+    backgroundColor: '#fff',
+    marginBottom: 20,
+    fontSize: 16,
+    borderWidth: 1,
+    borderColor: '#333',
+    borderRadius: 8,
+    padding: 12,
+  },
   button: {
     borderRadius: 10,
     paddingVertical: 14,
@@ -39,6 +78,9 @@ const styles = StyleSheet.create({
     width: '60%',
     marginBottom: 5,
     alignSelf: 'center',
+  },
+  buttonDisabled: {
+    backgroundColor: '#999',
   },
   buttonText: {
     color: 'white',
