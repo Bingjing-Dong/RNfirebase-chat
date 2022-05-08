@@ -20,17 +20,39 @@ export default function Signup({ navigation }) {
         .then(() => console.log('Signup success'))
         .then(() => navigation.navigate('Chat'))
         .catch((err) => {
-          Alert.alert(
-            'Alert Message',
-            'The email address already been used, please login!',
-            [
+          let invalidEmail = err.toString().includes('auth/invalid-email');
+          let invalidPassword = err.toString().includes('auth/weak-password');
+          if (invalidEmail === true) {
+            Alert.alert('Alert Message', 'Please enter correct email address', [
               {
                 text: 'OK',
-                onPress: () => navigation.navigate('Login'),
+                onPress: () => navigation.navigate('Signup'),
               },
-            ]
-          );
-          console.log(`Login err: ${err}`);
+            ]);
+          } else if (invalidPassword === true) {
+            Alert.alert(
+              'Alert Message',
+              'Password should be at least 6 characters.',
+              [
+                {
+                  text: 'OK',
+                  onPress: () => navigation.navigate('Signup'),
+                },
+              ]
+            );
+          } else {
+            Alert.alert(
+              'Alert Message',
+              'The email address already been used, please login!',
+              [
+                {
+                  text: 'OK',
+                  onPress: () => navigation.navigate('Login'),
+                },
+              ]
+            );
+          }
+          // console.log(err);
         });
     }
   };
@@ -45,11 +67,13 @@ export default function Signup({ navigation }) {
         keyboardType="email-address"
         textContentType="emailAddress"
         value={email}
-        onChangeText={(text) => setEmail(text)}
+        onChangeText={(text) => {
+          setEmail(text);
+        }}
       />
       <TextInput
         style={styles.input}
-        placeholder="Enter password"
+        placeholder="Enter password at least 6 character"
         autoCapitalize="none"
         autoCorrect={false}
         secureTextEntry={true}
